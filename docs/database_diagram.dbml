@@ -1,0 +1,345 @@
+// ============================================================
+// DIAGRAMA DE BASE DE DATOS - INVENTORY APP
+// ============================================================
+// Para visualizar: https://dbdiagram.io
+// Copia y pega este contenido en dbdiagram.io
+// Luego exporta como PNG, PDF o SQL
+// ============================================================
+
+Project InventoryApp {
+  database_type: 'SQLite'
+  Note: '''
+    # Sistema de Gestión de Inventario
+    Aplicación móvil Flutter para gestión de inventario
+    multi-tienda y multi-almacén con soporte offline.
+  '''
+}
+
+// ==================== USUARIOS Y ROLES ====================
+
+Table users {
+  id integer [pk, increment]
+  username varchar(30) [unique, not null, note: 'Login único']
+  password_hash varchar(255) [not null]
+  full_name varchar(100) [not null]
+  email varchar(100) [unique]
+  phone varchar(20)
+  is_active boolean [default: true]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+  store_id integer [ref: > stores.id, note: 'Tienda asignada']
+  warehouse_id integer [ref: > warehouses.id, note: 'Almacén asignado']
+
+  Note: 'Usuarios del sistema con autenticación'
+}
+
+Table roles {
+  id integer [pk, increment]
+  code varchar(50) [unique, not null, note: 'SUPER_ADMIN, VENDEDOR, etc.']
+  name varchar(100) [not null]
+  description varchar(500)
+  permissions_json text [default: '[]', note: 'Permisos en JSON']
+  created_at datetime [default: `now()`]
+
+  Note: 'Roles y permisos del sistema'
+}
+
+Table user_roles {
+  id integer [pk, increment]
+  user_id integer [ref: > users.id, not null]
+  role_id integer [ref: > roles.id, not null]
+  store_id integer [ref: > stores.id]
+  warehouse_id integer [ref: > warehouses.id]
+  is_primary boolean [default: false]
+  assigned_at datetime [default: `now()`]
+
+  indexes {
+    (user_id, role_id, store_id, warehouse_id) [unique]
+  }
+
+  Note: 'Asignación de roles a usuarios con ubicación'
+}
+
+// ==================== UBICACIONES ====================
+
+Table stores {
+  id integer [pk, increment]
+  code varchar(20) [unique, not null, note: 'T001, T002, etc.']
+  name varchar(100) [not null]
+  address varchar(255) [not null]
+  phone varchar(20)
+  email varchar(100)
+  manager_id integer [ref: > users.id]
+  latitude real
+  longitude real
+  is_active boolean [default: true]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Tiendas/Sucursales de venta'
+}
+
+Table warehouses {
+  id integer [pk, increment]
+  code varchar(20) [unique, not null, note: 'ALM001, ALM002, etc.']
+  name varchar(100) [not null]
+  address varchar(255) [not null]
+  phone varchar(20)
+  email varchar(100)
+  manager_id integer [ref: > users.id]
+  latitude real
+  longitude real
+  is_active boolean [default: true]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Almacenes de stock'
+}
+
+// ==================== PRODUCTOS ====================
+
+Table products {
+  id integer [pk, increment]
+  code varchar(50) [unique, not null, note: 'Código producto']
+  name varchar(200) [not null]
+  description varchar(1000)
+  brand varchar(100) [note: 'Marca']
+  category varchar(50) [not null, note: 'Categoría']
+  base_price real [default: 0.0, note: 'Precio base']
+  cost_price real [default: 0.0, note: 'Costo/Precio compra']
+  image_url varchar(500)
+  is_active boolean [default: true]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Catálogo de productos base'
+}
+
+Table product_variants {
+  id integer [pk, increment]
+  product_id integer [ref: > products.id, not null]
+  sku varchar(100) [unique, not null, note: 'Stock Keeping Unit']
+  size varchar(20) [note: 'S, M, L, XL, 38, 40, etc.']
+  color varchar(50)
+  barcode varchar(50) [unique]
+  additional_price real [default: 0.0]
+  notes varchar(500)
+  image_url varchar(500)
+  is_active boolean [default: true]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Variantes de producto (talla, color, etc.)'
+}
+
+// ==================== INVENTARIO ====================
+
+Table inventory {
+  id integer [pk, increment]
+  product_variant_id integer [ref: > product_variants.id, not null]
+  location_type varchar(20) [not null, note: 'STORE o WAREHOUSE']
+  location_id integer [not null, note: 'ID de tienda o almacén']
+  quantity integer [default: 0, note: 'Cantidad en stock']
+  min_stock integer [default: 0, note: 'Stock mínimo (alertas)']
+  max_stock integer [default: 1000]
+  last_updated datetime [default: `now()`]
+  updated_by integer [ref: > users.id]
+  last_sync_at datetime
+
+  indexes {
+    (product_variant_id, location_type, location_id) [unique]
+  }
+
+  Note: 'Stock por variante y ubicación'
+}
+
+Table inventory_movements {
+  id integer [pk, increment]
+  product_variant_id integer [ref: > product_variants.id, not null]
+  location_type varchar(20) [not null]
+  location_id integer [not null]
+  movement_type varchar(30) [not null, note: 'PURCHASE, SALE, TRANSFER_IN, TRANSFER_OUT, ADJUSTMENT']
+  reference_type varchar(30) [note: 'Tipo: purchase, sale, transfer']
+  reference_id integer [note: 'ID del documento']
+  quantity_change integer [not null, note: 'Cambio (+/-)']
+  quantity_before integer [not null]
+  quantity_after integer [not null]
+  notes varchar(500)
+  created_by integer [ref: > users.id]
+  created_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Historial de movimientos para auditoría'
+}
+
+// ==================== VENTAS ====================
+
+Table sales {
+  id integer [pk, increment]
+  sale_number varchar(50) [unique, not null, note: 'VEN-2024-0001']
+  store_id integer [ref: > stores.id, not null]
+  customer_name varchar(200)
+  customer_document varchar(20) [note: 'DNI/CI']
+  customer_phone varchar(20)
+  customer_email varchar(100)
+  sale_date datetime [not null]
+  subtotal real [default: 0.0]
+  discount real [default: 0.0]
+  tax real [default: 0.0]
+  total real [default: 0.0]
+  payment_method varchar(20) [not null, note: 'EFECTIVO, TARJETA, TRANSFERENCIA']
+  cash_amount real
+  card_amount real
+  notes varchar(1000)
+  status varchar(20) [default: 'COMPLETED', note: 'COMPLETED, CANCELLED']
+  created_by integer [ref: > users.id]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Ventas realizadas en tiendas'
+}
+
+Table sale_details {
+  id integer [pk, increment]
+  sale_id integer [ref: > sales.id, not null]
+  product_variant_id integer [ref: > product_variants.id, not null]
+  quantity integer [not null]
+  unit_price real [not null, note: 'Precio al momento de venta']
+  discount real [default: 0.0]
+  subtotal real [not null]
+  created_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Detalle de items vendidos'
+}
+
+// ==================== COMPRAS ====================
+
+Table purchases {
+  id integer [pk, increment]
+  purchase_number varchar(50) [unique, not null, note: 'COM-2024-0001']
+  supplier_name varchar(200) [not null]
+  supplier_ruc varchar(20) [note: 'NIT/RUC proveedor']
+  supplier_phone varchar(20)
+  supplier_email varchar(100)
+  warehouse_id integer [ref: > warehouses.id, not null]
+  purchase_date datetime [not null]
+  total_amount real [default: 0.0]
+  notes varchar(1000)
+  status varchar(20) [default: 'PENDING', note: 'PENDING, RECEIVED, CANCELLED']
+  created_by integer [ref: > users.id]
+  created_at datetime [default: `now()`]
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Órdenes de compra a proveedores'
+}
+
+Table purchase_details {
+  id integer [pk, increment]
+  purchase_id integer [ref: > purchases.id, not null]
+  product_variant_id integer [ref: > product_variants.id, not null]
+  quantity integer [not null]
+  unit_cost real [not null]
+  subtotal real [not null]
+  created_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Detalle de items comprados'
+}
+
+// ==================== TRANSFERENCIAS ====================
+
+Table transfers {
+  id integer [pk, increment]
+  transfer_number varchar(50) [unique, not null, note: 'TRF-2024-0001']
+  from_type varchar(20) [not null, note: 'STORE o WAREHOUSE']
+  from_id integer [not null, note: 'ID origen']
+  to_type varchar(20) [not null, note: 'STORE o WAREHOUSE']
+  to_id integer [not null, note: 'ID destino']
+  transfer_date datetime [not null]
+  status varchar(20) [default: 'PENDING', note: 'PENDING, APPROVED, IN_TRANSIT, RECEIVED, CANCELLED']
+  notes varchar(1000)
+  created_by integer [ref: > users.id]
+  created_at datetime [default: `now()`]
+  approved_by integer [ref: > users.id]
+  approved_at datetime
+  received_by integer [ref: > users.id]
+  received_at datetime
+  updated_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Transferencias entre almacenes y tiendas'
+}
+
+Table transfer_details {
+  id integer [pk, increment]
+  transfer_id integer [ref: > transfers.id, not null]
+  product_variant_id integer [ref: > product_variants.id, not null]
+  quantity integer [not null, note: 'Cantidad enviada']
+  received_quantity integer [note: 'Cantidad recibida (puede diferir)']
+  notes varchar(500)
+  created_at datetime [default: `now()`]
+  last_sync_at datetime
+
+  Note: 'Detalle de items transferidos'
+}
+
+// ==================== SINCRONIZACIÓN ====================
+
+Table sync_queue {
+  id integer [pk, increment]
+  table_name varchar(50) [not null]
+  record_id integer [not null]
+  operation varchar(20) [not null, note: 'INSERT, UPDATE, DELETE']
+  data text [note: 'JSON con datos']
+  status varchar(20) [default: 'PENDING', note: 'PENDING, PROCESSING, COMPLETED, FAILED']
+  created_at datetime [default: `now()`]
+  processed_at datetime
+
+  Note: 'Cola de sincronización para modo offline'
+}
+
+// ==================== GRUPOS DE TABLAS ====================
+
+TableGroup usuarios_roles {
+  users
+  roles
+  user_roles
+}
+
+TableGroup ubicaciones {
+  stores
+  warehouses
+}
+
+TableGroup catalogo {
+  products
+  product_variants
+}
+
+TableGroup inventario {
+  inventory
+  inventory_movements
+}
+
+TableGroup ventas {
+  sales
+  sale_details
+}
+
+TableGroup compras {
+  purchases
+  purchase_details
+}
+
+TableGroup transferencias {
+  transfers
+  transfer_details
+}
