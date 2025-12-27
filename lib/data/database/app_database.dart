@@ -15,6 +15,8 @@ import 'tables/purchases_table.dart';
 import 'tables/sales_table.dart';
 import 'tables/transfers_table.dart';
 import 'tables/sync_queue_table.dart';
+import 'tables/audit_log_table.dart';
+import 'tables/user_sessions_table.dart';
 
 // Importar DAOs
 import 'daos/user_dao.dart';
@@ -25,6 +27,8 @@ import 'daos/purchases_dao.dart';
 import 'daos/transfers_dao.dart';
 import 'daos/stores_dao.dart';
 import 'daos/warehouses_dao.dart';
+import 'daos/audit_log_dao.dart';
+import 'daos/user_sessions_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -48,6 +52,8 @@ part 'app_database.g.dart';
     Transfers,
     TransferDetails,
     SyncQueue,
+    AuditLog,
+    UserSessions,
   ],
   daos: [
     UserDao,
@@ -58,13 +64,15 @@ part 'app_database.g.dart';
     TransfersDao,
     StoresDao,
     WarehousesDao,
+    AuditLogDao,
+    UserSessionsDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -80,6 +88,12 @@ class AppDatabase extends _$AppDatabase {
         if (from < 2) {
           await m.addColumn(users, users.storeId);
           await m.addColumn(users, users.warehouseId);
+        }
+
+        // Migración de versión 2 a 3: Agregar tablas de auditoría y sesiones
+        if (from < 3) {
+          await m.createTable(auditLog);
+          await m.createTable(userSessions);
         }
       },
       beforeOpen: (details) async {

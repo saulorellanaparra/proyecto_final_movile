@@ -9977,6 +9977,1127 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   }
 }
 
+class $AuditLogTable extends AuditLog
+    with TableInfo<$AuditLogTable, AuditLogData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AuditLogTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES users (id) ON DELETE SET NULL'));
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 30),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _entityTypeMeta =
+      const VerificationMeta('entityType');
+  @override
+  late final GeneratedColumn<String> entityType = GeneratedColumn<String>(
+      'entity_type', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _entityIdMeta =
+      const VerificationMeta('entityId');
+  @override
+  late final GeneratedColumn<int> entityId = GeneratedColumn<int>(
+      'entity_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 500),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _oldValuesMeta =
+      const VerificationMeta('oldValues');
+  @override
+  late final GeneratedColumn<String> oldValues = GeneratedColumn<String>(
+      'old_values', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _newValuesMeta =
+      const VerificationMeta('newValues');
+  @override
+  late final GeneratedColumn<String> newValues = GeneratedColumn<String>(
+      'new_values', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _ipAddressMeta =
+      const VerificationMeta('ipAddress');
+  @override
+  late final GeneratedColumn<String> ipAddress = GeneratedColumn<String>(
+      'ip_address', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _deviceInfoMeta =
+      const VerificationMeta('deviceInfo');
+  @override
+  late final GeneratedColumn<String> deviceInfo = GeneratedColumn<String>(
+      'device_info', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 200),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        userId,
+        action,
+        entityType,
+        entityId,
+        description,
+        oldValues,
+        newValues,
+        ipAddress,
+        deviceInfo,
+        createdAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'audit_log';
+  @override
+  VerificationContext validateIntegrity(Insertable<AuditLogData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
+    } else if (isInserting) {
+      context.missing(_actionMeta);
+    }
+    if (data.containsKey('entity_type')) {
+      context.handle(
+          _entityTypeMeta,
+          entityType.isAcceptableOrUnknown(
+              data['entity_type']!, _entityTypeMeta));
+    }
+    if (data.containsKey('entity_id')) {
+      context.handle(_entityIdMeta,
+          entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('old_values')) {
+      context.handle(_oldValuesMeta,
+          oldValues.isAcceptableOrUnknown(data['old_values']!, _oldValuesMeta));
+    }
+    if (data.containsKey('new_values')) {
+      context.handle(_newValuesMeta,
+          newValues.isAcceptableOrUnknown(data['new_values']!, _newValuesMeta));
+    }
+    if (data.containsKey('ip_address')) {
+      context.handle(_ipAddressMeta,
+          ipAddress.isAcceptableOrUnknown(data['ip_address']!, _ipAddressMeta));
+    }
+    if (data.containsKey('device_info')) {
+      context.handle(
+          _deviceInfoMeta,
+          deviceInfo.isAcceptableOrUnknown(
+              data['device_info']!, _deviceInfoMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AuditLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AuditLogData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action'])!,
+      entityType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}entity_type']),
+      entityId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}entity_id']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      oldValues: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}old_values']),
+      newValues: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}new_values']),
+      ipAddress: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}ip_address']),
+      deviceInfo: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_info']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $AuditLogTable createAlias(String alias) {
+    return $AuditLogTable(attachedDatabase, alias);
+  }
+}
+
+class AuditLogData extends DataClass implements Insertable<AuditLogData> {
+  /// ID único del registro de auditoría
+  final int id;
+
+  /// ID del usuario que realizó la acción
+  final int userId;
+
+  /// Tipo de acción (LOGIN, LOGOUT, CREATE, UPDATE, DELETE)
+  final String action;
+
+  /// Tipo de entidad afectada (PRODUCT, SALE, PURCHASE, TRANSFER, USER, etc.)
+  final String? entityType;
+
+  /// ID de la entidad afectada
+  final int? entityId;
+
+  /// Descripción de la acción realizada
+  final String description;
+
+  /// Valores anteriores (JSON) antes del cambio
+  final String? oldValues;
+
+  /// Nuevos valores (JSON) después del cambio
+  final String? newValues;
+
+  /// Dirección IP desde donde se realizó la acción
+  final String? ipAddress;
+
+  /// Información del dispositivo
+  final String? deviceInfo;
+
+  /// Fecha y hora de la acción
+  final DateTime createdAt;
+  const AuditLogData(
+      {required this.id,
+      required this.userId,
+      required this.action,
+      this.entityType,
+      this.entityId,
+      required this.description,
+      this.oldValues,
+      this.newValues,
+      this.ipAddress,
+      this.deviceInfo,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['action'] = Variable<String>(action);
+    if (!nullToAbsent || entityType != null) {
+      map['entity_type'] = Variable<String>(entityType);
+    }
+    if (!nullToAbsent || entityId != null) {
+      map['entity_id'] = Variable<int>(entityId);
+    }
+    map['description'] = Variable<String>(description);
+    if (!nullToAbsent || oldValues != null) {
+      map['old_values'] = Variable<String>(oldValues);
+    }
+    if (!nullToAbsent || newValues != null) {
+      map['new_values'] = Variable<String>(newValues);
+    }
+    if (!nullToAbsent || ipAddress != null) {
+      map['ip_address'] = Variable<String>(ipAddress);
+    }
+    if (!nullToAbsent || deviceInfo != null) {
+      map['device_info'] = Variable<String>(deviceInfo);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  AuditLogCompanion toCompanion(bool nullToAbsent) {
+    return AuditLogCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      action: Value(action),
+      entityType: entityType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(entityType),
+      entityId: entityId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(entityId),
+      description: Value(description),
+      oldValues: oldValues == null && nullToAbsent
+          ? const Value.absent()
+          : Value(oldValues),
+      newValues: newValues == null && nullToAbsent
+          ? const Value.absent()
+          : Value(newValues),
+      ipAddress: ipAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ipAddress),
+      deviceInfo: deviceInfo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deviceInfo),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory AuditLogData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AuditLogData(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      action: serializer.fromJson<String>(json['action']),
+      entityType: serializer.fromJson<String?>(json['entityType']),
+      entityId: serializer.fromJson<int?>(json['entityId']),
+      description: serializer.fromJson<String>(json['description']),
+      oldValues: serializer.fromJson<String?>(json['oldValues']),
+      newValues: serializer.fromJson<String?>(json['newValues']),
+      ipAddress: serializer.fromJson<String?>(json['ipAddress']),
+      deviceInfo: serializer.fromJson<String?>(json['deviceInfo']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'action': serializer.toJson<String>(action),
+      'entityType': serializer.toJson<String?>(entityType),
+      'entityId': serializer.toJson<int?>(entityId),
+      'description': serializer.toJson<String>(description),
+      'oldValues': serializer.toJson<String?>(oldValues),
+      'newValues': serializer.toJson<String?>(newValues),
+      'ipAddress': serializer.toJson<String?>(ipAddress),
+      'deviceInfo': serializer.toJson<String?>(deviceInfo),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  AuditLogData copyWith(
+          {int? id,
+          int? userId,
+          String? action,
+          Value<String?> entityType = const Value.absent(),
+          Value<int?> entityId = const Value.absent(),
+          String? description,
+          Value<String?> oldValues = const Value.absent(),
+          Value<String?> newValues = const Value.absent(),
+          Value<String?> ipAddress = const Value.absent(),
+          Value<String?> deviceInfo = const Value.absent(),
+          DateTime? createdAt}) =>
+      AuditLogData(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        action: action ?? this.action,
+        entityType: entityType.present ? entityType.value : this.entityType,
+        entityId: entityId.present ? entityId.value : this.entityId,
+        description: description ?? this.description,
+        oldValues: oldValues.present ? oldValues.value : this.oldValues,
+        newValues: newValues.present ? newValues.value : this.newValues,
+        ipAddress: ipAddress.present ? ipAddress.value : this.ipAddress,
+        deviceInfo: deviceInfo.present ? deviceInfo.value : this.deviceInfo,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  AuditLogData copyWithCompanion(AuditLogCompanion data) {
+    return AuditLogData(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      action: data.action.present ? data.action.value : this.action,
+      entityType:
+          data.entityType.present ? data.entityType.value : this.entityType,
+      entityId: data.entityId.present ? data.entityId.value : this.entityId,
+      description:
+          data.description.present ? data.description.value : this.description,
+      oldValues: data.oldValues.present ? data.oldValues.value : this.oldValues,
+      newValues: data.newValues.present ? data.newValues.value : this.newValues,
+      ipAddress: data.ipAddress.present ? data.ipAddress.value : this.ipAddress,
+      deviceInfo:
+          data.deviceInfo.present ? data.deviceInfo.value : this.deviceInfo,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AuditLogData(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('action: $action, ')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('description: $description, ')
+          ..write('oldValues: $oldValues, ')
+          ..write('newValues: $newValues, ')
+          ..write('ipAddress: $ipAddress, ')
+          ..write('deviceInfo: $deviceInfo, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, action, entityType, entityId,
+      description, oldValues, newValues, ipAddress, deviceInfo, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AuditLogData &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.action == this.action &&
+          other.entityType == this.entityType &&
+          other.entityId == this.entityId &&
+          other.description == this.description &&
+          other.oldValues == this.oldValues &&
+          other.newValues == this.newValues &&
+          other.ipAddress == this.ipAddress &&
+          other.deviceInfo == this.deviceInfo &&
+          other.createdAt == this.createdAt);
+}
+
+class AuditLogCompanion extends UpdateCompanion<AuditLogData> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<String> action;
+  final Value<String?> entityType;
+  final Value<int?> entityId;
+  final Value<String> description;
+  final Value<String?> oldValues;
+  final Value<String?> newValues;
+  final Value<String?> ipAddress;
+  final Value<String?> deviceInfo;
+  final Value<DateTime> createdAt;
+  const AuditLogCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.action = const Value.absent(),
+    this.entityType = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.description = const Value.absent(),
+    this.oldValues = const Value.absent(),
+    this.newValues = const Value.absent(),
+    this.ipAddress = const Value.absent(),
+    this.deviceInfo = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  AuditLogCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required String action,
+    this.entityType = const Value.absent(),
+    this.entityId = const Value.absent(),
+    required String description,
+    this.oldValues = const Value.absent(),
+    this.newValues = const Value.absent(),
+    this.ipAddress = const Value.absent(),
+    this.deviceInfo = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  })  : userId = Value(userId),
+        action = Value(action),
+        description = Value(description);
+  static Insertable<AuditLogData> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<String>? action,
+    Expression<String>? entityType,
+    Expression<int>? entityId,
+    Expression<String>? description,
+    Expression<String>? oldValues,
+    Expression<String>? newValues,
+    Expression<String>? ipAddress,
+    Expression<String>? deviceInfo,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (action != null) 'action': action,
+      if (entityType != null) 'entity_type': entityType,
+      if (entityId != null) 'entity_id': entityId,
+      if (description != null) 'description': description,
+      if (oldValues != null) 'old_values': oldValues,
+      if (newValues != null) 'new_values': newValues,
+      if (ipAddress != null) 'ip_address': ipAddress,
+      if (deviceInfo != null) 'device_info': deviceInfo,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  AuditLogCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? userId,
+      Value<String>? action,
+      Value<String?>? entityType,
+      Value<int?>? entityId,
+      Value<String>? description,
+      Value<String?>? oldValues,
+      Value<String?>? newValues,
+      Value<String?>? ipAddress,
+      Value<String?>? deviceInfo,
+      Value<DateTime>? createdAt}) {
+    return AuditLogCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      action: action ?? this.action,
+      entityType: entityType ?? this.entityType,
+      entityId: entityId ?? this.entityId,
+      description: description ?? this.description,
+      oldValues: oldValues ?? this.oldValues,
+      newValues: newValues ?? this.newValues,
+      ipAddress: ipAddress ?? this.ipAddress,
+      deviceInfo: deviceInfo ?? this.deviceInfo,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (entityType.present) {
+      map['entity_type'] = Variable<String>(entityType.value);
+    }
+    if (entityId.present) {
+      map['entity_id'] = Variable<int>(entityId.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (oldValues.present) {
+      map['old_values'] = Variable<String>(oldValues.value);
+    }
+    if (newValues.present) {
+      map['new_values'] = Variable<String>(newValues.value);
+    }
+    if (ipAddress.present) {
+      map['ip_address'] = Variable<String>(ipAddress.value);
+    }
+    if (deviceInfo.present) {
+      map['device_info'] = Variable<String>(deviceInfo.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AuditLogCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('action: $action, ')
+          ..write('entityType: $entityType, ')
+          ..write('entityId: $entityId, ')
+          ..write('description: $description, ')
+          ..write('oldValues: $oldValues, ')
+          ..write('newValues: $newValues, ')
+          ..write('ipAddress: $ipAddress, ')
+          ..write('deviceInfo: $deviceInfo, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $UserSessionsTable extends UserSessions
+    with TableInfo<$UserSessionsTable, UserSessionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserSessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES users (id) ON DELETE CASCADE'));
+  static const VerificationMeta _loginAtMeta =
+      const VerificationMeta('loginAt');
+  @override
+  late final GeneratedColumn<DateTime> loginAt = GeneratedColumn<DateTime>(
+      'login_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _logoutAtMeta =
+      const VerificationMeta('logoutAt');
+  @override
+  late final GeneratedColumn<DateTime> logoutAt = GeneratedColumn<DateTime>(
+      'logout_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _deviceInfoMeta =
+      const VerificationMeta('deviceInfo');
+  @override
+  late final GeneratedColumn<String> deviceInfo = GeneratedColumn<String>(
+      'device_info', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 200),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _ipAddressMeta =
+      const VerificationMeta('ipAddress');
+  @override
+  late final GeneratedColumn<String> ipAddress = GeneratedColumn<String>(
+      'ip_address', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _isActiveMeta =
+      const VerificationMeta('isActive');
+  @override
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+      'is_active', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'),
+      defaultValue: const Constant(true));
+  static const VerificationMeta _locationTypeMeta =
+      const VerificationMeta('locationType');
+  @override
+  late final GeneratedColumn<String> locationType = GeneratedColumn<String>(
+      'location_type', aliasedName, true,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 20),
+      type: DriftSqlType.string,
+      requiredDuringInsert: false);
+  static const VerificationMeta _locationIdMeta =
+      const VerificationMeta('locationId');
+  @override
+  late final GeneratedColumn<int> locationId = GeneratedColumn<int>(
+      'location_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _lastSyncAtMeta =
+      const VerificationMeta('lastSyncAt');
+  @override
+  late final GeneratedColumn<DateTime> lastSyncAt = GeneratedColumn<DateTime>(
+      'last_sync_at', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        userId,
+        loginAt,
+        logoutAt,
+        deviceInfo,
+        ipAddress,
+        isActive,
+        locationType,
+        locationId,
+        lastSyncAt
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_sessions';
+  @override
+  VerificationContext validateIntegrity(Insertable<UserSessionData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('login_at')) {
+      context.handle(_loginAtMeta,
+          loginAt.isAcceptableOrUnknown(data['login_at']!, _loginAtMeta));
+    }
+    if (data.containsKey('logout_at')) {
+      context.handle(_logoutAtMeta,
+          logoutAt.isAcceptableOrUnknown(data['logout_at']!, _logoutAtMeta));
+    }
+    if (data.containsKey('device_info')) {
+      context.handle(
+          _deviceInfoMeta,
+          deviceInfo.isAcceptableOrUnknown(
+              data['device_info']!, _deviceInfoMeta));
+    }
+    if (data.containsKey('ip_address')) {
+      context.handle(_ipAddressMeta,
+          ipAddress.isAcceptableOrUnknown(data['ip_address']!, _ipAddressMeta));
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(_isActiveMeta,
+          isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta));
+    }
+    if (data.containsKey('location_type')) {
+      context.handle(
+          _locationTypeMeta,
+          locationType.isAcceptableOrUnknown(
+              data['location_type']!, _locationTypeMeta));
+    }
+    if (data.containsKey('location_id')) {
+      context.handle(
+          _locationIdMeta,
+          locationId.isAcceptableOrUnknown(
+              data['location_id']!, _locationIdMeta));
+    }
+    if (data.containsKey('last_sync_at')) {
+      context.handle(
+          _lastSyncAtMeta,
+          lastSyncAt.isAcceptableOrUnknown(
+              data['last_sync_at']!, _lastSyncAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserSessionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserSessionData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
+      loginAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}login_at'])!,
+      logoutAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}logout_at']),
+      deviceInfo: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}device_info']),
+      ipAddress: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}ip_address']),
+      isActive: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_active'])!,
+      locationType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_type']),
+      locationId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}location_id']),
+      lastSyncAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_sync_at']),
+    );
+  }
+
+  @override
+  $UserSessionsTable createAlias(String alias) {
+    return $UserSessionsTable(attachedDatabase, alias);
+  }
+}
+
+class UserSessionData extends DataClass implements Insertable<UserSessionData> {
+  /// ID único de la sesión
+  final int id;
+
+  /// ID del usuario que inició sesión
+  final int userId;
+
+  /// Fecha y hora de inicio de sesión
+  final DateTime loginAt;
+
+  /// Fecha y hora de cierre de sesión (null si la sesión está activa)
+  final DateTime? logoutAt;
+
+  /// Información del dispositivo (ej: 'Android 13', 'iOS 16', 'Windows 11')
+  final String? deviceInfo;
+
+  /// Dirección IP desde donde se inició sesión
+  final String? ipAddress;
+
+  /// Indica si la sesión está activa
+  final bool isActive;
+
+  /// Tipo de ubicación desde donde inició sesión (STORE o WAREHOUSE)
+  final String? locationType;
+
+  /// ID de la ubicación desde donde inició sesión
+  final int? locationId;
+
+  /// Fecha y hora de última sincronización
+  final DateTime? lastSyncAt;
+  const UserSessionData(
+      {required this.id,
+      required this.userId,
+      required this.loginAt,
+      this.logoutAt,
+      this.deviceInfo,
+      this.ipAddress,
+      required this.isActive,
+      this.locationType,
+      this.locationId,
+      this.lastSyncAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['login_at'] = Variable<DateTime>(loginAt);
+    if (!nullToAbsent || logoutAt != null) {
+      map['logout_at'] = Variable<DateTime>(logoutAt);
+    }
+    if (!nullToAbsent || deviceInfo != null) {
+      map['device_info'] = Variable<String>(deviceInfo);
+    }
+    if (!nullToAbsent || ipAddress != null) {
+      map['ip_address'] = Variable<String>(ipAddress);
+    }
+    map['is_active'] = Variable<bool>(isActive);
+    if (!nullToAbsent || locationType != null) {
+      map['location_type'] = Variable<String>(locationType);
+    }
+    if (!nullToAbsent || locationId != null) {
+      map['location_id'] = Variable<int>(locationId);
+    }
+    if (!nullToAbsent || lastSyncAt != null) {
+      map['last_sync_at'] = Variable<DateTime>(lastSyncAt);
+    }
+    return map;
+  }
+
+  UserSessionsCompanion toCompanion(bool nullToAbsent) {
+    return UserSessionsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      loginAt: Value(loginAt),
+      logoutAt: logoutAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(logoutAt),
+      deviceInfo: deviceInfo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deviceInfo),
+      ipAddress: ipAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ipAddress),
+      isActive: Value(isActive),
+      locationType: locationType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationType),
+      locationId: locationId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationId),
+      lastSyncAt: lastSyncAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSyncAt),
+    );
+  }
+
+  factory UserSessionData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserSessionData(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      loginAt: serializer.fromJson<DateTime>(json['loginAt']),
+      logoutAt: serializer.fromJson<DateTime?>(json['logoutAt']),
+      deviceInfo: serializer.fromJson<String?>(json['deviceInfo']),
+      ipAddress: serializer.fromJson<String?>(json['ipAddress']),
+      isActive: serializer.fromJson<bool>(json['isActive']),
+      locationType: serializer.fromJson<String?>(json['locationType']),
+      locationId: serializer.fromJson<int?>(json['locationId']),
+      lastSyncAt: serializer.fromJson<DateTime?>(json['lastSyncAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'loginAt': serializer.toJson<DateTime>(loginAt),
+      'logoutAt': serializer.toJson<DateTime?>(logoutAt),
+      'deviceInfo': serializer.toJson<String?>(deviceInfo),
+      'ipAddress': serializer.toJson<String?>(ipAddress),
+      'isActive': serializer.toJson<bool>(isActive),
+      'locationType': serializer.toJson<String?>(locationType),
+      'locationId': serializer.toJson<int?>(locationId),
+      'lastSyncAt': serializer.toJson<DateTime?>(lastSyncAt),
+    };
+  }
+
+  UserSessionData copyWith(
+          {int? id,
+          int? userId,
+          DateTime? loginAt,
+          Value<DateTime?> logoutAt = const Value.absent(),
+          Value<String?> deviceInfo = const Value.absent(),
+          Value<String?> ipAddress = const Value.absent(),
+          bool? isActive,
+          Value<String?> locationType = const Value.absent(),
+          Value<int?> locationId = const Value.absent(),
+          Value<DateTime?> lastSyncAt = const Value.absent()}) =>
+      UserSessionData(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        loginAt: loginAt ?? this.loginAt,
+        logoutAt: logoutAt.present ? logoutAt.value : this.logoutAt,
+        deviceInfo: deviceInfo.present ? deviceInfo.value : this.deviceInfo,
+        ipAddress: ipAddress.present ? ipAddress.value : this.ipAddress,
+        isActive: isActive ?? this.isActive,
+        locationType:
+            locationType.present ? locationType.value : this.locationType,
+        locationId: locationId.present ? locationId.value : this.locationId,
+        lastSyncAt: lastSyncAt.present ? lastSyncAt.value : this.lastSyncAt,
+      );
+  UserSessionData copyWithCompanion(UserSessionsCompanion data) {
+    return UserSessionData(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      loginAt: data.loginAt.present ? data.loginAt.value : this.loginAt,
+      logoutAt: data.logoutAt.present ? data.logoutAt.value : this.logoutAt,
+      deviceInfo:
+          data.deviceInfo.present ? data.deviceInfo.value : this.deviceInfo,
+      ipAddress: data.ipAddress.present ? data.ipAddress.value : this.ipAddress,
+      isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      locationType: data.locationType.present
+          ? data.locationType.value
+          : this.locationType,
+      locationId:
+          data.locationId.present ? data.locationId.value : this.locationId,
+      lastSyncAt:
+          data.lastSyncAt.present ? data.lastSyncAt.value : this.lastSyncAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserSessionData(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('loginAt: $loginAt, ')
+          ..write('logoutAt: $logoutAt, ')
+          ..write('deviceInfo: $deviceInfo, ')
+          ..write('ipAddress: $ipAddress, ')
+          ..write('isActive: $isActive, ')
+          ..write('locationType: $locationType, ')
+          ..write('locationId: $locationId, ')
+          ..write('lastSyncAt: $lastSyncAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, userId, loginAt, logoutAt, deviceInfo,
+      ipAddress, isActive, locationType, locationId, lastSyncAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserSessionData &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.loginAt == this.loginAt &&
+          other.logoutAt == this.logoutAt &&
+          other.deviceInfo == this.deviceInfo &&
+          other.ipAddress == this.ipAddress &&
+          other.isActive == this.isActive &&
+          other.locationType == this.locationType &&
+          other.locationId == this.locationId &&
+          other.lastSyncAt == this.lastSyncAt);
+}
+
+class UserSessionsCompanion extends UpdateCompanion<UserSessionData> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<DateTime> loginAt;
+  final Value<DateTime?> logoutAt;
+  final Value<String?> deviceInfo;
+  final Value<String?> ipAddress;
+  final Value<bool> isActive;
+  final Value<String?> locationType;
+  final Value<int?> locationId;
+  final Value<DateTime?> lastSyncAt;
+  const UserSessionsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.loginAt = const Value.absent(),
+    this.logoutAt = const Value.absent(),
+    this.deviceInfo = const Value.absent(),
+    this.ipAddress = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.locationType = const Value.absent(),
+    this.locationId = const Value.absent(),
+    this.lastSyncAt = const Value.absent(),
+  });
+  UserSessionsCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    this.loginAt = const Value.absent(),
+    this.logoutAt = const Value.absent(),
+    this.deviceInfo = const Value.absent(),
+    this.ipAddress = const Value.absent(),
+    this.isActive = const Value.absent(),
+    this.locationType = const Value.absent(),
+    this.locationId = const Value.absent(),
+    this.lastSyncAt = const Value.absent(),
+  }) : userId = Value(userId);
+  static Insertable<UserSessionData> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<DateTime>? loginAt,
+    Expression<DateTime>? logoutAt,
+    Expression<String>? deviceInfo,
+    Expression<String>? ipAddress,
+    Expression<bool>? isActive,
+    Expression<String>? locationType,
+    Expression<int>? locationId,
+    Expression<DateTime>? lastSyncAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (loginAt != null) 'login_at': loginAt,
+      if (logoutAt != null) 'logout_at': logoutAt,
+      if (deviceInfo != null) 'device_info': deviceInfo,
+      if (ipAddress != null) 'ip_address': ipAddress,
+      if (isActive != null) 'is_active': isActive,
+      if (locationType != null) 'location_type': locationType,
+      if (locationId != null) 'location_id': locationId,
+      if (lastSyncAt != null) 'last_sync_at': lastSyncAt,
+    });
+  }
+
+  UserSessionsCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? userId,
+      Value<DateTime>? loginAt,
+      Value<DateTime?>? logoutAt,
+      Value<String?>? deviceInfo,
+      Value<String?>? ipAddress,
+      Value<bool>? isActive,
+      Value<String?>? locationType,
+      Value<int?>? locationId,
+      Value<DateTime?>? lastSyncAt}) {
+    return UserSessionsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      loginAt: loginAt ?? this.loginAt,
+      logoutAt: logoutAt ?? this.logoutAt,
+      deviceInfo: deviceInfo ?? this.deviceInfo,
+      ipAddress: ipAddress ?? this.ipAddress,
+      isActive: isActive ?? this.isActive,
+      locationType: locationType ?? this.locationType,
+      locationId: locationId ?? this.locationId,
+      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (loginAt.present) {
+      map['login_at'] = Variable<DateTime>(loginAt.value);
+    }
+    if (logoutAt.present) {
+      map['logout_at'] = Variable<DateTime>(logoutAt.value);
+    }
+    if (deviceInfo.present) {
+      map['device_info'] = Variable<String>(deviceInfo.value);
+    }
+    if (ipAddress.present) {
+      map['ip_address'] = Variable<String>(ipAddress.value);
+    }
+    if (isActive.present) {
+      map['is_active'] = Variable<bool>(isActive.value);
+    }
+    if (locationType.present) {
+      map['location_type'] = Variable<String>(locationType.value);
+    }
+    if (locationId.present) {
+      map['location_id'] = Variable<int>(locationId.value);
+    }
+    if (lastSyncAt.present) {
+      map['last_sync_at'] = Variable<DateTime>(lastSyncAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserSessionsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('loginAt: $loginAt, ')
+          ..write('logoutAt: $logoutAt, ')
+          ..write('deviceInfo: $deviceInfo, ')
+          ..write('ipAddress: $ipAddress, ')
+          ..write('isActive: $isActive, ')
+          ..write('locationType: $locationType, ')
+          ..write('locationId: $locationId, ')
+          ..write('lastSyncAt: $lastSyncAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10000,6 +11121,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $TransferDetailsTable transferDetails =
       $TransferDetailsTable(this);
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
+  late final $AuditLogTable auditLog = $AuditLogTable(this);
+  late final $UserSessionsTable userSessions = $UserSessionsTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final ProductDao productDao = ProductDao(this as AppDatabase);
   late final InventoryDao inventoryDao = InventoryDao(this as AppDatabase);
@@ -10008,6 +11131,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final TransfersDao transfersDao = TransfersDao(this as AppDatabase);
   late final StoresDao storesDao = StoresDao(this as AppDatabase);
   late final WarehousesDao warehousesDao = WarehousesDao(this as AppDatabase);
+  late final AuditLogDao auditLogDao = AuditLogDao(this as AppDatabase);
+  late final UserSessionsDao userSessionsDao =
+      UserSessionsDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -10028,7 +11154,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         saleDetails,
         transfers,
         transferDetails,
-        syncQueue
+        syncQueue,
+        auditLog,
+        userSessions
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -10164,6 +11292,20 @@ abstract class _$AppDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('transfer_details', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('audit_log', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('user_sessions', kind: UpdateKind.delete),
             ],
           ),
         ],
@@ -10302,6 +11444,34 @@ final class $$UsersTableReferences
         .filter((f) => f.createdBy.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_salesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$AuditLogTable, List<AuditLogData>>
+      _auditLogRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.auditLog,
+              aliasName: $_aliasNameGenerator(db.users.id, db.auditLog.userId));
+
+  $$AuditLogTableProcessedTableManager get auditLogRefs {
+    final manager = $$AuditLogTableTableManager($_db, $_db.auditLog)
+        .filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_auditLogRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$UserSessionsTable, List<UserSessionData>>
+      _userSessionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+          db.userSessions,
+          aliasName: $_aliasNameGenerator(db.users.id, db.userSessions.userId));
+
+  $$UserSessionsTableProcessedTableManager get userSessionsRefs {
+    final manager = $$UserSessionsTableTableManager($_db, $_db.userSessions)
+        .filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_userSessionsRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -10490,6 +11660,48 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
             $$SalesTableFilterComposer(
               $db: $db,
               $table: $db.sales,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> auditLogRefs(
+      Expression<bool> Function($$AuditLogTableFilterComposer f) f) {
+    final $$AuditLogTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.auditLog,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AuditLogTableFilterComposer(
+              $db: $db,
+              $table: $db.auditLog,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> userSessionsRefs(
+      Expression<bool> Function($$UserSessionsTableFilterComposer f) f) {
+    final $$UserSessionsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.userSessions,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserSessionsTableFilterComposer(
+              $db: $db,
+              $table: $db.userSessions,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -10738,6 +11950,48 @@ class $$UsersTableAnnotationComposer
             ));
     return f(composer);
   }
+
+  Expression<T> auditLogRefs<T extends Object>(
+      Expression<T> Function($$AuditLogTableAnnotationComposer a) f) {
+    final $$AuditLogTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.auditLog,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AuditLogTableAnnotationComposer(
+              $db: $db,
+              $table: $db.auditLog,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> userSessionsRefs<T extends Object>(
+      Expression<T> Function($$UserSessionsTableAnnotationComposer a) f) {
+    final $$UserSessionsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.userSessions,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserSessionsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.userSessions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableTableManager extends RootTableManager<
@@ -10758,7 +12012,9 @@ class $$UsersTableTableManager extends RootTableManager<
         bool inventoryRefs,
         bool inventoryMovementsRefs,
         bool purchasesRefs,
-        bool salesRefs})> {
+        bool salesRefs,
+        bool auditLogRefs,
+        bool userSessionsRefs})> {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
       : super(TableManagerState(
           db: db,
@@ -10836,7 +12092,9 @@ class $$UsersTableTableManager extends RootTableManager<
               inventoryRefs = false,
               inventoryMovementsRefs = false,
               purchasesRefs = false,
-              salesRefs = false}) {
+              salesRefs = false,
+              auditLogRefs = false,
+              userSessionsRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
@@ -10846,7 +12104,9 @@ class $$UsersTableTableManager extends RootTableManager<
                 if (inventoryRefs) db.inventory,
                 if (inventoryMovementsRefs) db.inventoryMovements,
                 if (purchasesRefs) db.purchases,
-                if (salesRefs) db.sales
+                if (salesRefs) db.sales,
+                if (auditLogRefs) db.auditLog,
+                if (userSessionsRefs) db.userSessions
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -10934,6 +12194,31 @@ class $$UsersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem:
                             (item, referencedItems) => referencedItems
                                 .where((e) => e.createdBy == item.id),
+                        typedResults: items),
+                  if (auditLogRefs)
+                    await $_getPrefetchedData<UserData, $UsersTable,
+                            AuditLogData>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UsersTableReferences._auditLogRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0).auditLogRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items),
+                  if (userSessionsRefs)
+                    await $_getPrefetchedData<UserData, $UsersTable,
+                            UserSessionData>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UsersTableReferences._userSessionsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .userSessionsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
                         typedResults: items)
                 ];
               },
@@ -10960,7 +12245,9 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
         bool inventoryRefs,
         bool inventoryMovementsRefs,
         bool purchasesRefs,
-        bool salesRefs})>;
+        bool salesRefs,
+        bool auditLogRefs,
+        bool userSessionsRefs})>;
 typedef $$RolesTableCreateCompanionBuilder = RolesCompanion Function({
   Value<int> id,
   required String code,
@@ -18247,6 +19534,703 @@ typedef $$SyncQueueTableProcessedTableManager = ProcessedTableManager<
     ),
     SyncQueueData,
     PrefetchHooks Function()>;
+typedef $$AuditLogTableCreateCompanionBuilder = AuditLogCompanion Function({
+  Value<int> id,
+  required int userId,
+  required String action,
+  Value<String?> entityType,
+  Value<int?> entityId,
+  required String description,
+  Value<String?> oldValues,
+  Value<String?> newValues,
+  Value<String?> ipAddress,
+  Value<String?> deviceInfo,
+  Value<DateTime> createdAt,
+});
+typedef $$AuditLogTableUpdateCompanionBuilder = AuditLogCompanion Function({
+  Value<int> id,
+  Value<int> userId,
+  Value<String> action,
+  Value<String?> entityType,
+  Value<int?> entityId,
+  Value<String> description,
+  Value<String?> oldValues,
+  Value<String?> newValues,
+  Value<String?> ipAddress,
+  Value<String?> deviceInfo,
+  Value<DateTime> createdAt,
+});
+
+final class $$AuditLogTableReferences
+    extends BaseReferences<_$AppDatabase, $AuditLogTable, AuditLogData> {
+  $$AuditLogTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users
+      .createAlias($_aliasNameGenerator(db.auditLog.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<int>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$AuditLogTableFilterComposer
+    extends Composer<_$AppDatabase, $AuditLogTable> {
+  $$AuditLogTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get action => $composableBuilder(
+      column: $table.action, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get entityType => $composableBuilder(
+      column: $table.entityType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get entityId => $composableBuilder(
+      column: $table.entityId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get oldValues => $composableBuilder(
+      column: $table.oldValues, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get newValues => $composableBuilder(
+      column: $table.newValues, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get ipAddress => $composableBuilder(
+      column: $table.ipAddress, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get deviceInfo => $composableBuilder(
+      column: $table.deviceInfo, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$AuditLogTableOrderingComposer
+    extends Composer<_$AppDatabase, $AuditLogTable> {
+  $$AuditLogTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get action => $composableBuilder(
+      column: $table.action, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get entityType => $composableBuilder(
+      column: $table.entityType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get entityId => $composableBuilder(
+      column: $table.entityId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get oldValues => $composableBuilder(
+      column: $table.oldValues, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get newValues => $composableBuilder(
+      column: $table.newValues, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get ipAddress => $composableBuilder(
+      column: $table.ipAddress, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get deviceInfo => $composableBuilder(
+      column: $table.deviceInfo, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$AuditLogTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AuditLogTable> {
+  $$AuditLogTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get action =>
+      $composableBuilder(column: $table.action, builder: (column) => column);
+
+  GeneratedColumn<String> get entityType => $composableBuilder(
+      column: $table.entityType, builder: (column) => column);
+
+  GeneratedColumn<int> get entityId =>
+      $composableBuilder(column: $table.entityId, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get oldValues =>
+      $composableBuilder(column: $table.oldValues, builder: (column) => column);
+
+  GeneratedColumn<String> get newValues =>
+      $composableBuilder(column: $table.newValues, builder: (column) => column);
+
+  GeneratedColumn<String> get ipAddress =>
+      $composableBuilder(column: $table.ipAddress, builder: (column) => column);
+
+  GeneratedColumn<String> get deviceInfo => $composableBuilder(
+      column: $table.deviceInfo, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$AuditLogTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AuditLogTable,
+    AuditLogData,
+    $$AuditLogTableFilterComposer,
+    $$AuditLogTableOrderingComposer,
+    $$AuditLogTableAnnotationComposer,
+    $$AuditLogTableCreateCompanionBuilder,
+    $$AuditLogTableUpdateCompanionBuilder,
+    (AuditLogData, $$AuditLogTableReferences),
+    AuditLogData,
+    PrefetchHooks Function({bool userId})> {
+  $$AuditLogTableTableManager(_$AppDatabase db, $AuditLogTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AuditLogTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AuditLogTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AuditLogTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> userId = const Value.absent(),
+            Value<String> action = const Value.absent(),
+            Value<String?> entityType = const Value.absent(),
+            Value<int?> entityId = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<String?> oldValues = const Value.absent(),
+            Value<String?> newValues = const Value.absent(),
+            Value<String?> ipAddress = const Value.absent(),
+            Value<String?> deviceInfo = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              AuditLogCompanion(
+            id: id,
+            userId: userId,
+            action: action,
+            entityType: entityType,
+            entityId: entityId,
+            description: description,
+            oldValues: oldValues,
+            newValues: newValues,
+            ipAddress: ipAddress,
+            deviceInfo: deviceInfo,
+            createdAt: createdAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int userId,
+            required String action,
+            Value<String?> entityType = const Value.absent(),
+            Value<int?> entityId = const Value.absent(),
+            required String description,
+            Value<String?> oldValues = const Value.absent(),
+            Value<String?> newValues = const Value.absent(),
+            Value<String?> ipAddress = const Value.absent(),
+            Value<String?> deviceInfo = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              AuditLogCompanion.insert(
+            id: id,
+            userId: userId,
+            action: action,
+            entityType: entityType,
+            entityId: entityId,
+            description: description,
+            oldValues: oldValues,
+            newValues: newValues,
+            ipAddress: ipAddress,
+            deviceInfo: deviceInfo,
+            createdAt: createdAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$AuditLogTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable: $$AuditLogTableReferences._userIdTable(db),
+                    referencedColumn:
+                        $$AuditLogTableReferences._userIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$AuditLogTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $AuditLogTable,
+    AuditLogData,
+    $$AuditLogTableFilterComposer,
+    $$AuditLogTableOrderingComposer,
+    $$AuditLogTableAnnotationComposer,
+    $$AuditLogTableCreateCompanionBuilder,
+    $$AuditLogTableUpdateCompanionBuilder,
+    (AuditLogData, $$AuditLogTableReferences),
+    AuditLogData,
+    PrefetchHooks Function({bool userId})>;
+typedef $$UserSessionsTableCreateCompanionBuilder = UserSessionsCompanion
+    Function({
+  Value<int> id,
+  required int userId,
+  Value<DateTime> loginAt,
+  Value<DateTime?> logoutAt,
+  Value<String?> deviceInfo,
+  Value<String?> ipAddress,
+  Value<bool> isActive,
+  Value<String?> locationType,
+  Value<int?> locationId,
+  Value<DateTime?> lastSyncAt,
+});
+typedef $$UserSessionsTableUpdateCompanionBuilder = UserSessionsCompanion
+    Function({
+  Value<int> id,
+  Value<int> userId,
+  Value<DateTime> loginAt,
+  Value<DateTime?> logoutAt,
+  Value<String?> deviceInfo,
+  Value<String?> ipAddress,
+  Value<bool> isActive,
+  Value<String?> locationType,
+  Value<int?> locationId,
+  Value<DateTime?> lastSyncAt,
+});
+
+final class $$UserSessionsTableReferences
+    extends BaseReferences<_$AppDatabase, $UserSessionsTable, UserSessionData> {
+  $$UserSessionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users
+      .createAlias($_aliasNameGenerator(db.userSessions.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<int>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$UserSessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $UserSessionsTable> {
+  $$UserSessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get loginAt => $composableBuilder(
+      column: $table.loginAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get logoutAt => $composableBuilder(
+      column: $table.logoutAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get deviceInfo => $composableBuilder(
+      column: $table.deviceInfo, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get ipAddress => $composableBuilder(
+      column: $table.ipAddress, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isActive => $composableBuilder(
+      column: $table.isActive, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get locationType => $composableBuilder(
+      column: $table.locationType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get locationId => $composableBuilder(
+      column: $table.locationId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastSyncAt => $composableBuilder(
+      column: $table.lastSyncAt, builder: (column) => ColumnFilters(column));
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$UserSessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserSessionsTable> {
+  $$UserSessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get loginAt => $composableBuilder(
+      column: $table.loginAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get logoutAt => $composableBuilder(
+      column: $table.logoutAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get deviceInfo => $composableBuilder(
+      column: $table.deviceInfo, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get ipAddress => $composableBuilder(
+      column: $table.ipAddress, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isActive => $composableBuilder(
+      column: $table.isActive, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get locationType => $composableBuilder(
+      column: $table.locationType,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get locationId => $composableBuilder(
+      column: $table.locationId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastSyncAt => $composableBuilder(
+      column: $table.lastSyncAt, builder: (column) => ColumnOrderings(column));
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$UserSessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserSessionsTable> {
+  $$UserSessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get loginAt =>
+      $composableBuilder(column: $table.loginAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get logoutAt =>
+      $composableBuilder(column: $table.logoutAt, builder: (column) => column);
+
+  GeneratedColumn<String> get deviceInfo => $composableBuilder(
+      column: $table.deviceInfo, builder: (column) => column);
+
+  GeneratedColumn<String> get ipAddress =>
+      $composableBuilder(column: $table.ipAddress, builder: (column) => column);
+
+  GeneratedColumn<bool> get isActive =>
+      $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<String> get locationType => $composableBuilder(
+      column: $table.locationType, builder: (column) => column);
+
+  GeneratedColumn<int> get locationId => $composableBuilder(
+      column: $table.locationId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastSyncAt => $composableBuilder(
+      column: $table.lastSyncAt, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$UserSessionsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $UserSessionsTable,
+    UserSessionData,
+    $$UserSessionsTableFilterComposer,
+    $$UserSessionsTableOrderingComposer,
+    $$UserSessionsTableAnnotationComposer,
+    $$UserSessionsTableCreateCompanionBuilder,
+    $$UserSessionsTableUpdateCompanionBuilder,
+    (UserSessionData, $$UserSessionsTableReferences),
+    UserSessionData,
+    PrefetchHooks Function({bool userId})> {
+  $$UserSessionsTableTableManager(_$AppDatabase db, $UserSessionsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserSessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserSessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserSessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> userId = const Value.absent(),
+            Value<DateTime> loginAt = const Value.absent(),
+            Value<DateTime?> logoutAt = const Value.absent(),
+            Value<String?> deviceInfo = const Value.absent(),
+            Value<String?> ipAddress = const Value.absent(),
+            Value<bool> isActive = const Value.absent(),
+            Value<String?> locationType = const Value.absent(),
+            Value<int?> locationId = const Value.absent(),
+            Value<DateTime?> lastSyncAt = const Value.absent(),
+          }) =>
+              UserSessionsCompanion(
+            id: id,
+            userId: userId,
+            loginAt: loginAt,
+            logoutAt: logoutAt,
+            deviceInfo: deviceInfo,
+            ipAddress: ipAddress,
+            isActive: isActive,
+            locationType: locationType,
+            locationId: locationId,
+            lastSyncAt: lastSyncAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int userId,
+            Value<DateTime> loginAt = const Value.absent(),
+            Value<DateTime?> logoutAt = const Value.absent(),
+            Value<String?> deviceInfo = const Value.absent(),
+            Value<String?> ipAddress = const Value.absent(),
+            Value<bool> isActive = const Value.absent(),
+            Value<String?> locationType = const Value.absent(),
+            Value<int?> locationId = const Value.absent(),
+            Value<DateTime?> lastSyncAt = const Value.absent(),
+          }) =>
+              UserSessionsCompanion.insert(
+            id: id,
+            userId: userId,
+            loginAt: loginAt,
+            logoutAt: logoutAt,
+            deviceInfo: deviceInfo,
+            ipAddress: ipAddress,
+            isActive: isActive,
+            locationType: locationType,
+            locationId: locationId,
+            lastSyncAt: lastSyncAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$UserSessionsTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable:
+                        $$UserSessionsTableReferences._userIdTable(db),
+                    referencedColumn:
+                        $$UserSessionsTableReferences._userIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$UserSessionsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $UserSessionsTable,
+    UserSessionData,
+    $$UserSessionsTableFilterComposer,
+    $$UserSessionsTableOrderingComposer,
+    $$UserSessionsTableAnnotationComposer,
+    $$UserSessionsTableCreateCompanionBuilder,
+    $$UserSessionsTableUpdateCompanionBuilder,
+    (UserSessionData, $$UserSessionsTableReferences),
+    UserSessionData,
+    PrefetchHooks Function({bool userId})>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -18283,4 +20267,8 @@ class $AppDatabaseManager {
       $$TransferDetailsTableTableManager(_db, _db.transferDetails);
   $$SyncQueueTableTableManager get syncQueue =>
       $$SyncQueueTableTableManager(_db, _db.syncQueue);
+  $$AuditLogTableTableManager get auditLog =>
+      $$AuditLogTableTableManager(_db, _db.auditLog);
+  $$UserSessionsTableTableManager get userSessions =>
+      $$UserSessionsTableTableManager(_db, _db.userSessions);
 }

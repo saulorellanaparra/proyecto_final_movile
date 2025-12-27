@@ -12,6 +12,8 @@ import '../../presentation/bloc/transfers/transfers_bloc.dart';
 import '../../presentation/bloc/reports/reports_bloc.dart';
 import '../../presentation/bloc/product/product_bloc.dart';
 import '../../presentation/bloc/sales/sales_bloc.dart';
+import '../../presentation/bloc/audit/audit_bloc.dart';
+import '../../presentation/bloc/sessions/sessions_bloc.dart';
 
 /// Instancia global de GetIt para inyección de dependencias
 final getIt = GetIt.instance;
@@ -30,6 +32,8 @@ Future<void> setupDependencyInjection(AppDatabase database) async {
   getIt.registerLazySingleton(() => database.transfersDao);
   getIt.registerLazySingleton(() => database.storesDao);
   getIt.registerLazySingleton(() => database.warehousesDao);
+  getIt.registerLazySingleton(() => database.auditLogDao);
+  getIt.registerLazySingleton(() => database.userSessionsDao);
 
   // ==================== SERVICES ====================
   getIt.registerLazySingleton<LocationService>(
@@ -50,6 +54,8 @@ Future<void> setupDependencyInjection(AppDatabase database) async {
       userDao: getIt(),
       storesDao: getIt(),
       warehousesDao: getIt(),
+      auditLogDao: getIt(),
+      userSessionsDao: getIt(),
       locationService: getIt(),
     ),
   );
@@ -99,7 +105,17 @@ Future<void> setupDependencyInjection(AppDatabase database) async {
     ),
   );
 
-  // Otros BLoCs se registrarán aquí según se implementen
+  getIt.registerFactory<AuditBloc>(
+    () => AuditBloc(
+      auditLogDao: getIt(),
+    ),
+  );
+
+  getIt.registerFactory<SessionsBloc>(
+    () => SessionsBloc(
+      userSessionsDao: getIt(),
+    ),
+  );
 
   // ignore: avoid_print
   print('✅ Dependency Injection configurado');

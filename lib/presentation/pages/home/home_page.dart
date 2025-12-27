@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/constants/routes.dart';
 import '../../../core/services/location_service.dart';
+import '../../../core/services/stock_alert_service.dart';
 import '../../../data/database/app_database.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_event.dart';
@@ -12,17 +13,21 @@ import '../products/product_list_page.dart';
 import '../sales/sales_page.dart';
 import '../sales/sales_list_page.dart';
 import '../inventory/inventory_list_page.dart';
+import '../inventory/stock_alerts_page.dart';
 import '../purchases/purchases_list_page.dart';
 import '../transfers/transfers_list_page.dart';
 import '../transfers/pending_transfers_page.dart';
 import '../reports/reports_dashboard_page.dart';
 import '../settings/locations_page.dart';
 import '../settings/employees_page.dart';
+import '../audit/audit_log_page.dart';
+import '../sessions/session_history_page.dart';
 import '../../../core/constants/enums.dart';
 import '../../../core/services/dependency_injection.dart';
 import '../../bloc/transfers/transfers_bloc.dart';
 import '../../bloc/reports/reports_bloc.dart';
 import '../../widgets/location_selector_dialog.dart';
+import '../../widgets/recent_movements_widget.dart';
 
 /// Pantalla principal del dashboard
 class HomePage extends StatefulWidget {
@@ -115,6 +120,61 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
+          // Icono de alertas de stock bajo
+          if (!_isLoadingLocation)
+            FutureBuilder<int>(
+              future: StockAlertService(getIt()).getLowStockCount(
+                locationType: _locationType,
+                locationId: _locationId,
+              ),
+              builder: (context, snapshot) {
+                final count = snapshot.data ?? 0;
+                return Stack(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.notifications_outlined),
+                      tooltip: 'Alertas de Stock',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StockAlertsPage(
+                              locationId: _locationId,
+                              locationType: _locationType,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    if (count > 0)
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            count > 99 ? '99+' : '$count',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
           // Solo mostrar botón de cambiar ubicación si el usuario NO tiene ubicación asignada
           BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
@@ -250,6 +310,14 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 24),
+
+          // Widget de últimos movimientos
+          RecentMovementsWidget(
+            locationId: _locationId,
+            locationType: _locationType,
+            limit: 5,
           ),
           const SizedBox(height: 24),
 
@@ -537,6 +605,23 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
+              // Card de Auditoría (para roles administrativos)
+              if (state.role.code != 'VENDEDOR' &&
+                  state.role.code != 'ALMACENERO')
+                _buildDashboardCard(
+                  icon: Icons.history,
+                  title: 'Auditoría',
+                  subtitle: 'Registro de actividades',
+                  color: Colors.purple,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuditLogPage(),
+                      ),
+                    );
+                  },
+                ),
               // Solo mostrar Configuración para roles administrativos
               if (state.role.code != 'VENDEDOR' &&
                   state.role.code != 'ALMACENERO' &&
@@ -610,6 +695,21 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const EmployeesPage(),
+                                ),
+                              );
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.phonelink_lock, color: AppColors.primary),
+                            title: const Text('Historial de Sesiones'),
+                            subtitle: const Text('Ver accesos a la cuenta'),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SessionHistoryPage(),
                                 ),
                               );
                             },

@@ -229,7 +229,8 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
     LocationType locationType,
     int locationId,
     {DateTime? startDate,
-    DateTime? endDate,}
+    DateTime? endDate,
+    int? limit,}
   ) {
     final query = select(inventoryMovements)
       ..where((m) =>
@@ -246,7 +247,30 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
 
     query.orderBy([(m) => OrderingTerm.desc(m.createdAt)]);
 
+    if (limit != null) {
+      query.limit(limit);
+    }
+
     return query.get();
+  }
+
+  /// Stream de movimientos por ubicación (para actualizaciones en tiempo real)
+  Stream<List<InventoryMovementData>> watchMovementsByLocation(
+    LocationType locationType,
+    int locationId,
+    {int? limit,}
+  ) {
+    final query = select(inventoryMovements)
+      ..where((m) =>
+          m.locationType.equals(locationType.code) &
+          m.locationId.equals(locationId))
+      ..orderBy([(m) => OrderingTerm.desc(m.createdAt)]);
+
+    if (limit != null) {
+      query.limit(limit);
+    }
+
+    return query.watch();
   }
 
   /// Obtiene movimientos por variante

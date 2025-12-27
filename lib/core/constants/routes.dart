@@ -73,5 +73,12 @@ class AppRoutes {
   static const String changePassword = '/settings/change-password';
   static const String sync = '/settings/sync';
 
+  // Auditoría y Sesiones
+  static const String auditLog = '/audit';
+  static const String sessionHistory = '/sessions/history';
+
+  // Alertas
+  static const String stockAlerts = '/alerts/stock';
+
   AppRoutes._(); // Constructor privado para evitar instanciación
 }

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/database/daos/user_dao.dart';
 import '../../../data/database/daos/stores_dao.dart';
 import '../../../data/database/daos/warehouses_dao.dart';
+import '../../../data/database/daos/audit_log_dao.dart';
+import '../../../data/database/daos/user_sessions_dao.dart';
 import '../../../data/database/app_database.dart';
 import '../../../core/services/location_service.dart';
 import '../../../core/constants/enums.dart';
@@ -14,14 +16,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserDao userDao;
   final StoresDao storesDao;
   final WarehousesDao warehousesDao;
+  final AuditLogDao auditLogDao;
+  final UserSessionsDao userSessionsDao;
   final LocationService locationService;
   UserData? _currentUser;
   RoleData? _currentRole;
+  int? _currentSessionId; // ID de la sesión actual
 
   AuthBloc({
     required this.userDao,
     required this.storesDao,
     required this.warehousesDao,
+    required this.auditLogDao,
+    required this.userSessionsDao,
     required this.locationService,
   }) : super(AuthInitial()) {
     on<AuthCheckRequested>(_onAuthCheckRequested);
@@ -95,6 +102,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Configurar ubicación automáticamente si el usuario tiene una asignada
       await _setupUserLocation(user);
 
+      // Registrar sesión de usuario
+      try {
+        _currentSessionId = await userSessionsDao.createSession(
+          userId: user.id,
+          deviceInfo: 'Flutter App', // Podría obtener info real del dispositivo
+          ipAddress: null, // En app móvil/desktop no aplica
+        );
+      } catch (e) {
+        // No fallar el login si falla el registro de sesión
+        print('Error al registrar sesión: $e');
+      }
+
+      // Registrar evento de LOGIN en auditoría
+      try {
+        await auditLogDao.logAction(
+          userId: user.id,
+          action: 'LOGIN',
+          description: 'Usuario ${user.username} inició sesión exitosamente',
+          entityType: 'USER',
+          entityId: user.id,
+        );
+      } catch (e) {
+        // No fallar el login si falla el registro de auditoría
+        print('Error al registrar login en auditoría: $e');
+      }
+
       // Emitir estado de autenticado
       emit(AuthAuthenticated(user: user, role: role));
     } catch (e) {
@@ -142,8 +175,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
+      // Cerrar sesión activa
+      if (_currentSessionId != null) {
+        try {
+          await userSessionsDao.closeSession(_currentSessionId!);
+        } catch (e) {
+          print('Error al cerrar sesión: $e');
+        }
+      }
+
+      // Registrar evento de LOGOUT en auditoría antes de limpiar el usuario
+      if (_currentUser != null) {
+        try {
+          await auditLogDao.logAction(
+            userId: _currentUser!.id,
+            action: 'LOGOUT',
+            description: 'Usuario ${_currentUser!.username} cerró sesión',
+            entityType: 'USER',
+            entityId: _currentUser!.id,
+          );
+        } catch (e) {
+          // No fallar el logout si falla el registro de auditoría
+          print('Error al registrar logout en auditoría: $e');
+        }
+      }
+
       _currentUser = null;
       _currentRole = null;
+      _currentSessionId = null;
 
       // Limpiar sesión persistente si existe
 

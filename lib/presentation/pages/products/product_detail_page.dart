@@ -6,6 +6,7 @@ import '../../../data/database/app_database.dart';
 import '../../bloc/product/product_bloc.dart';
 import '../../bloc/product/product_event.dart';
 import '../../bloc/product/product_state.dart';
+import '../../widgets/product_traceability_widget.dart';
 import 'product_form_page.dart';
 
 /// Página de detalles del producto
@@ -452,9 +453,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             title: Text('${variant.size ?? 'N/A'} - ${variant.color ?? 'N/A'}'),
             subtitle: Text('SKU: ${variant.sku}'),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _confirmDeleteVariant(context, variant),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.timeline, color: Colors.blue),
+                  tooltip: 'Ver trazabilidad',
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => ProductTraceabilityWidget(
+                        productVariantId: variant.id,
+                        productName: '${_currentProduct?.name} - ${variant.size ?? ''} ${variant.color ?? ''}'.trim(),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                  tooltip: 'Eliminar variante',
+                  onPressed: () => _confirmDeleteVariant(context, variant),
+                ),
+              ],
             ),
           ),
         );
